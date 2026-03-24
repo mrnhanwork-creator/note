@@ -1,0 +1,670 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;font-size:13px;background:transparent}
+.app{display:flex;height:760px;background:#1e2235;border-radius:20px;overflow:hidden;color:#e2e8f0;position:relative}
+
+/* SIDEBAR */
+.sb{width:190px;background:#252a3d;border-right:1px solid #ffffff08;display:flex;flex-direction:column;flex-shrink:0}
+.sb-logo{padding:20px 16px 16px;border-bottom:1px solid #ffffff08;display:flex;align-items:center;gap:10px}
+.logo-mk{width:30px;height:30px;border-radius:8px;background:#6c63ff;display:flex;align-items:center;justify-content:center}
+.logo-mk svg{width:15px;height:15px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round}
+.logo-t{font-size:13px;font-weight:600;color:#f1f5f9}
+.logo-s{font-size:10px;color:#475569}
+.sb-nav{padding:14px 10px;display:flex;flex-direction:column;gap:2px;flex:1}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;font-size:12px;color:#64748b;cursor:pointer;transition:all .12s;user-select:none}
+.ni:hover{background:#ffffff08;color:#cbd5e1}
+.ni.on{background:#6c63ff1a;color:#a5b4fc;font-weight:500}
+.ni svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.nb{margin-left:auto;font-size:10px;background:#6c63ff28;color:#a5b4fc;padding:1px 6px;border-radius:10px}
+.ni-lock{margin-left:auto;opacity:.4}
+.ni-lock svg{width:11px;height:11px;fill:none;stroke:#94a3b8;stroke-width:2;stroke-linecap:round}
+.sb-bottom{padding:12px;border-top:1px solid #ffffff08}
+.guest-box{background:#ffffff06;border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:8px}
+.guest-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0}
+.guest-info .gn{font-size:12px;color:#94a3b8}
+.guest-info .gr{font-size:10px;color:#334155}
+.login-btn{width:100%;margin-top:8px;padding:8px;background:#6c63ff1a;border:1px solid #6c63ff40;border-radius:9px;color:#a5b4fc;font-size:12px;font-weight:500;cursor:pointer;transition:all .12s;text-align:center}
+.login-btn:hover{background:#6c63ff30}
+.admin-box{background:#6c63ff18;border-radius:10px;padding:10px 12px;border:1px solid #6c63ff30}
+.admin-row{display:flex;align-items:center;gap:8px}
+.av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:white;flex-shrink:0}
+.admin-info .an{font-size:12px;font-weight:500;color:#e2e8f0}
+.admin-info .ar{font-size:10px;color:#a5b4fc}
+.logout-btn{width:100%;margin-top:8px;padding:6px;background:transparent;border:1px solid #ffffff12;border-radius:8px;color:#475569;font-size:11px;cursor:pointer}
+.logout-btn:hover{border-color:#f8717140;color:#fca5a5}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.topbar{padding:16px 20px;border-bottom:1px solid #ffffff08;display:flex;align-items:center;gap:12px}
+.page-title{font-size:15px;font-weight:600;color:#f1f5f9;flex:1}
+.page-sub{font-size:11px;color:#475569;font-weight:400;margin-left:8px}
+.tb-search{display:flex;align-items:center;gap:7px;background:#2d3348;border:1px solid #ffffff0d;border-radius:9px;padding:7px 12px;width:170px}
+.tb-search svg{width:13px;height:13px;fill:none;stroke:#475569;stroke-width:2;stroke-linecap:round;flex-shrink:0}
+.tb-search input{background:none;border:none;outline:none;font-size:12px;color:#e2e8f0;width:100%}
+.tb-search input::placeholder{color:#334155}
+.admin-badge{display:flex;align-items:center;gap:5px;background:#6c63ff18;border:1px solid #6c63ff30;border-radius:8px;padding:5px 10px;font-size:11px;color:#a5b4fc}
+.admin-badge svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.tb-btn{display:flex;align-items:center;gap:6px;padding:7px 13px;background:#6c63ff;color:white;border:none;border-radius:9px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap}
+.tb-btn:hover{background:#5a52e0}
+.tb-btn svg{width:13px;height:13px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:14px}
+.content::-webkit-scrollbar{width:3px}
+.content::-webkit-scrollbar-thumb{background:#ffffff15;border-radius:3px}
+.page{display:none;flex-direction:column;gap:14px}
+.page.on{display:flex}
+
+/* STAT ROW */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.sc{background:#2d3348;border-radius:12px;padding:14px;border:1px solid #ffffff08}
+.sc-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.sc-icon svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.ic-p{background:#6c63ff20;color:#a5b4fc}
+.ic-t{background:#2dd4bf20;color:#5eead4}
+.ic-a{background:#fb923c20;color:#fdba74}
+.ic-g{background:#4ade8020;color:#86efac}
+.sc-n{font-size:26px;font-weight:700;color:#f1f5f9;letter-spacing:-.5px;line-height:1}
+.sc-l{font-size:11px;color:#475569;margin-top:3px}
+
+/* KANBAN */
+.kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-items:start}
+.kol{background:#2d3348;border-radius:14px;padding:12px;border:1px solid #ffffff08}
+.kol-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.kol-title{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:#cbd5e1}
+.kol-dot{width:8px;height:8px;border-radius:50%}
+.kd-todo{background:#64748b}.kd-doing{background:#6c63ff}.kd-done{background:#4ade80}
+.kol-cnt{font-size:11px;color:#475569;background:#ffffff08;padding:1px 7px;border-radius:10px}
+.kol-cards{display:flex;flex-direction:column;gap:8px}
+.kcard{background:#1e2235;border-radius:10px;padding:11px 12px;border:1px solid #ffffff08;cursor:pointer;transition:border-color .12s}
+.kcard:hover{border-color:#6c63ff40}
+.kcard-title{font-size:12px;font-weight:500;color:#e2e8f0;margin-bottom:6px;line-height:1.4}
+.kcard-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.kpill{font-size:10px;padding:2px 7px;border-radius:6px;font-weight:500}
+.kp-high{background:#f8717120;color:#fca5a5}
+.kp-mid{background:#fb923c20;color:#fdba74}
+.kp-low{background:#4ade8020;color:#86efac}
+.kcard-date{font-size:10px;color:#334155;display:flex;align-items:center;gap:3px}
+.kcard-date svg{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.kadd{margin-top:8px;width:100%;padding:7px;background:transparent;border:1px dashed #ffffff12;border-radius:9px;color:#334155;font-size:11px;cursor:pointer;transition:all .12s}
+.kadd:hover{border-color:#6c63ff40;color:#6c63ff}
+.kadd-hidden{display:none}
+
+/* TIMELINE */
+.tl-wrap{display:flex;flex-direction:column}
+.tl-item{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid #ffffff06;align-items:flex-start}
+.tl-item:last-child{border-bottom:none}
+.tl-left{width:70px;flex-shrink:0;text-align:right}
+.tl-date{font-size:11px;font-weight:500;color:#94a3b8}
+.tl-day{font-size:10px;color:#334155}
+.tl-line{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.tl-dot{width:10px;height:10px;border-radius:50%;border:2px solid;flex-shrink:0;margin-top:2px}
+.tl-conn{width:1px;background:#ffffff0a;flex:1;min-height:20px;margin:3px 0}
+.tl-body{flex:1;min-width:0}
+.tl-title{font-size:12px;font-weight:500;color:#e2e8f0;margin-bottom:4px}
+.tl-desc{font-size:11px;color:#475569;line-height:1.5;margin-bottom:6px}
+.tl-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px}
+.tag{font-size:10px;padding:2px 8px;border-radius:6px}
+.t-p{background:#6c63ff20;color:#a5b4fc}
+.t-t{background:#2dd4bf20;color:#5eead4}
+.t-a{background:#fb923c20;color:#fdba74}
+.t-g{background:#4ade8020;color:#86efac}
+.t-r{background:#f8717120;color:#fca5a5}
+.tl-assign{display:flex;gap:4px;align-items:center}
+.tl-alabel{font-size:10px;color:#334155;margin-left:4px}
+
+/* MEETING */
+.mtg-list{display:flex;flex-direction:column;gap:10px}
+.mtg-card{background:#2d3348;border-radius:12px;padding:14px;border:1px solid #ffffff08}
+.mtg-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+.mtg-title{font-size:13px;font-weight:500;color:#f1f5f9}
+.mtg-date{font-size:11px;color:#475569;margin-top:2px;display:flex;align-items:center;gap:5px}
+.mtg-date svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.mtg-st{font-size:10px;padding:3px 9px;border-radius:20px;font-weight:500;white-space:nowrap}
+.ms-done{background:#4ade8018;color:#86efac}
+.ms-plan{background:#6c63ff18;color:#a5b4fc}
+.ms-now{background:#fb923c18;color:#fdba74}
+.mtg-notes{font-size:11px;color:#64748b;line-height:1.6;border-left:2px solid #6c63ff40;padding-left:10px;margin-bottom:8px}
+.action-list{display:flex;flex-direction:column;gap:5px;margin-bottom:8px}
+.action-item{display:flex;align-items:center;gap:7px;font-size:11px;color:#94a3b8;background:#1e2235;padding:6px 10px;border-radius:7px;border:1px solid #ffffff06}
+.action-item input[type=checkbox]{accent-color:#6c63ff;width:12px;height:12px;cursor:pointer}
+.action-done{text-decoration:line-through;color:#334155}
+.mtg-members{display:flex;gap:4px;align-items:center}
+.mlabel{font-size:10px;color:#334155;margin-left:5px}
+
+/* ANNOUNCE */
+.ann-list{display:flex;flex-direction:column;gap:10px}
+.ann-card{background:#2d3348;border-radius:12px;padding:14px;border:1px solid #ffffff08;border-left:3px solid}
+.ann-card.urgent{border-left-color:#f87171}
+.ann-card.info{border-left-color:#6c63ff}
+.ann-card.success{border-left-color:#4ade80}
+.ann-head{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.ann-icon{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ann-icon svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.ai-u{background:#f8717120;color:#fca5a5}
+.ai-i{background:#6c63ff20;color:#a5b4fc}
+.ai-s{background:#4ade8020;color:#86efac}
+.ann-title{font-size:13px;font-weight:500;color:#f1f5f9;flex:1;line-height:1.4}
+.ann-time{font-size:10px;color:#334155;white-space:nowrap}
+.ann-body{font-size:12px;color:#64748b;line-height:1.65;margin-bottom:8px}
+.ann-footer{display:flex;align-items:center;justify-content:space-between}
+.ann-author{font-size:11px;color:#475569;display:flex;align-items:center;gap:6px}
+.ann-del{font-size:10px;color:#f87171;cursor:pointer;padding:3px 8px;border-radius:6px;border:1px solid #f8717130;display:none}
+.ann-del:hover{background:#f8717115}
+
+/* QUY TRINH */
+.qp-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.qp-search{display:flex;align-items:center;gap:7px;background:#2d3348;border:1px solid #ffffff0d;border-radius:9px;padding:7px 12px;flex:1;max-width:240px}
+.qp-search svg{width:13px;height:13px;fill:none;stroke:#475569;stroke-width:2;stroke-linecap:round;flex-shrink:0}
+.qp-search input{background:none;border:none;outline:none;font-size:12px;color:#e2e8f0;width:100%}
+.qp-search input::placeholder{color:#334155}
+.cat-pill{font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid #ffffff0f;color:#64748b;cursor:pointer;background:transparent;transition:all .12s;white-space:nowrap}
+.cat-pill:hover{border-color:#6c63ff40;color:#a5b4fc}
+.cat-pill.on{background:#6c63ff22;border-color:#6c63ff44;color:#a5b4fc;font-weight:500}
+.doc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.doc-card{background:#2d3348;border-radius:12px;padding:14px;border:1px solid #ffffff08;cursor:pointer;transition:border-color .15s}
+.doc-card:hover{border-color:#6c63ff40}
+.doc-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.doc-ico{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.doc-ico svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.di-b{background:#6c63ff20;color:#a5b4fc}
+.di-g{background:#4ade8020;color:#86efac}
+.di-t{background:#2dd4bf20;color:#5eead4}
+.di-a{background:#fb923c20;color:#fdba74}
+.doc-info{flex:1;min-width:0}
+.doc-title{font-size:12px;font-weight:500;color:#f1f5f9;margin-bottom:3px;line-height:1.4}
+.doc-code{font-size:10px;color:#475569;font-family:monospace}
+.doc-desc{font-size:11px;color:#64748b;line-height:1.55;margin-bottom:8px}
+.doc-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.doc-tag{font-size:10px;padding:2px 8px;border-radius:6px}
+.doc-ver{font-size:10px;color:#475569;margin-left:auto}
+.doc-date{font-size:10px;color:#334155}
+.doc-actions{display:flex;gap:6px;margin-top:8px}
+.doc-btn{font-size:11px;padding:4px 10px;border-radius:7px;border:1px solid #ffffff0f;color:#94a3b8;cursor:pointer;background:transparent;display:flex;align-items:center;gap:4px;transition:all .12s}
+.doc-btn svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.doc-btn:hover{border-color:#6c63ff40;color:#a5b4fc}
+.doc-btn-del{border-color:#f8717120;color:#f87171;display:none}
+.doc-btn-del:hover{background:#f8717115;border-color:#f8717160}
+
+/* LOGIN MODAL */
+.modal-bg{display:none;position:absolute;inset:0;background:#00000070;border-radius:20px;align-items:center;justify-content:center;z-index:99}
+.modal-box{background:#252a3d;border-radius:16px;padding:24px;width:300px;border:1px solid #ffffff12}
+.modal-title{font-size:15px;font-weight:600;color:#f1f5f9;margin-bottom:4px}
+.modal-sub{font-size:12px;color:#475569;margin-bottom:18px}
+.modal-field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.modal-field label{font-size:11px;color:#64748b}
+.modal-field input{background:#1e2235;border:1px solid #ffffff0f;border-radius:9px;padding:9px 12px;font-size:12px;color:#e2e8f0;outline:none;font-family:inherit}
+.modal-field input:focus{border-color:#6c63ff55}
+.modal-err{font-size:11px;color:#fca5a5;margin-bottom:8px;display:none}
+.modal-actions{display:flex;gap:8px}
+.mbtn-cancel{flex:1;padding:9px;background:transparent;border:1px solid #ffffff12;border-radius:9px;color:#64748b;font-size:12px;cursor:pointer}
+.mbtn-login{flex:1;padding:9px;background:#6c63ff;color:white;border:none;border-radius:9px;font-size:12px;font-weight:500;cursor:pointer}
+.mbtn-login:hover{background:#5a52e0}
+
+/* ADD DOC MODAL */
+.adoc-modal-bg{display:none;position:absolute;inset:0;background:#00000070;border-radius:20px;align-items:center;justify-content:center;z-index:99}
+.adoc-box{background:#252a3d;border-radius:16px;padding:24px;width:360px;border:1px solid #ffffff12}
+.adoc-title{font-size:14px;font-weight:600;color:#f1f5f9;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.adoc-close{color:#475569;cursor:pointer;font-size:18px;line-height:1}
+.adoc-f{display:flex;flex-direction:column;gap:9px}
+.adoc-f input,.adoc-f select,.adoc-f textarea{width:100%;background:#1e2235;border:1px solid #ffffff0f;border-radius:9px;padding:9px 12px;font-size:12px;color:#e2e8f0;outline:none;font-family:inherit;resize:none}
+.adoc-f input:focus,.adoc-f select:focus,.adoc-f textarea:focus{border-color:#6c63ff55}
+.adoc-f select option{background:#1e2235}
+.adoc-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.adoc-submit{width:100%;padding:10px;background:#6c63ff;color:white;border:none;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;margin-top:4px}
+.adoc-submit:hover{background:#5a52e0}
+</style>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+<div class="sb">
+  <div class="sb-logo">
+    <div class="logo-mk"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+    <div><div class="logo-t">OpsBoard</div><div class="logo-s">Vận hành nội bộ</div></div>
+  </div>
+
+  <div class="sb-nav">
+    <div class="ni on" onclick="showPage('kanban',this)">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Kanban Board<span class="nb" id="nb-k">8</span>
+    </div>
+    <div class="ni" onclick="showPage('timeline',this)">
+      <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Timeline
+    </div>
+    <div class="ni" onclick="showPage('meeting',this)">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      Cuộc họp<span class="nb">3</span>
+    </div>
+    <div class="ni" onclick="showPage('announce',this)">
+      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+      Thông báo<span class="nb" id="nb-ann">3</span>
+    </div>
+    <div class="ni" onclick="showPage('docs',this)">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      Quy trình &amp; Văn bản<span class="nb" id="nb-doc">6</span>
+    </div>
+    <div class="ni" id="ni-admin-only" onclick="requireAdmin('kanban-admin',this)" style="display:none">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Quản trị Admin
+      <span class="ni-lock"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
+    </div>
+  </div>
+
+  <div class="sb-bottom" id="sb-bottom-area">
+    <div class="guest-box">
+      <div class="guest-dot"></div>
+      <div class="guest-info"><div class="gn">Khách / Nhân viên</div><div class="gr">Xem công khai</div></div>
+    </div>
+    <div class="login-btn" onclick="openLogin()">Đăng nhập Admin</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div style="flex:1">
+      <span class="page-title" id="ptitle">Kanban Board</span>
+      <span class="page-sub" id="psub">Theo dõi tiến độ công việc</span>
+    </div>
+    <div class="tb-search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="main-search" placeholder="Tìm kiếm..." oninput="onSearch()">
+    </div>
+    <div id="admin-badge" style="display:none" class="admin-badge">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Admin
+    </div>
+    <button class="tb-btn" id="add-btn" onclick="onAddClick()" style="display:none">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Thêm mới
+    </button>
+  </div>
+
+  <div class="content">
+    <!-- KANBAN -->
+    <div class="page on" id="page-kanban">
+      <div class="stat-row">
+        <div class="sc"><div class="sc-icon ic-p"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="sc-n" id="sc-total">8</div><div class="sc-l">Tổng nhiệm vụ</div></div>
+        <div class="sc"><div class="sc-icon ic-a"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="sc-n" id="sc-doing">3</div><div class="sc-l">Đang thực hiện</div></div>
+        <div class="sc"><div class="sc-icon ic-g"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="sc-n" id="sc-done">3</div><div class="sc-l">Hoàn thành</div></div>
+        <div class="sc"><div class="sc-icon ic-t"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="sc-n">4</div><div class="sc-l">Thành viên</div></div>
+      </div>
+      <div class="kanban" id="kanban-board"></div>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="page" id="page-timeline">
+      <div class="tl-wrap" id="tl-wrap"></div>
+    </div>
+
+    <!-- MEETING -->
+    <div class="page" id="page-meeting">
+      <div class="mtg-list" id="mtg-list"></div>
+    </div>
+
+    <!-- ANNOUNCE -->
+    <div class="page" id="page-announce">
+      <div class="ann-list" id="ann-list"></div>
+    </div>
+
+    <!-- QUY TRINH & VAN BAN -->
+    <div class="page" id="page-docs">
+      <div class="qp-toolbar">
+        <div class="qp-search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="doc-search" placeholder="Tìm văn bản, mã hiệu..." oninput="renderDocs()">
+        </div>
+        <div id="cat-pills"></div>
+      </div>
+      <div class="doc-grid" id="doc-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-bg" id="login-modal" style="display:none">
+  <div class="modal-box">
+    <div class="modal-title">Đăng nhập quản trị</div>
+    <div class="modal-sub">Chỉ dành cho Admin — nhân viên không cần đăng nhập</div>
+    <div class="modal-field"><label>Tài khoản</label><input id="l-user" placeholder="admin" value="admin"></div>
+    <div class="modal-field"><label>Mật khẩu</label><input id="l-pass" type="password" placeholder="••••••" value="1234" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div class="modal-err" id="l-err">Sai tài khoản hoặc mật khẩu</div>
+    <div class="modal-actions">
+      <button class="mbtn-cancel" onclick="closeLogin()">Huỷ</button>
+      <button class="mbtn-login" onclick="doLogin()">Đăng nhập</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD DOC MODAL -->
+<div class="adoc-modal-bg" id="adoc-modal" style="display:none">
+  <div class="adoc-box">
+    <div class="adoc-title">
+      <span id="adoc-modal-title">Thêm văn bản / Quy trình</span>
+      <span class="adoc-close" onclick="closeDocModal()">×</span>
+    </div>
+    <div class="adoc-f">
+      <input id="ad-title" placeholder="Tên văn bản / quy trình *">
+      <div class="adoc-row">
+        <input id="ad-code" placeholder="Mã hiệu (VD: SOP-001)">
+        <select id="ad-cat">
+          <option>Vận hành</option><option>An toàn</option><option>Nhân sự</option><option>Tài chính</option>
+        </select>
+      </div>
+      <textarea id="ad-desc" rows="2" placeholder="Mô tả ngắn nội dung văn bản..."></textarea>
+      <div class="adoc-row">
+        <input id="ad-ver" placeholder="Phiên bản (VD: v2.1)">
+        <input id="ad-date" placeholder="Ngày hiệu lực (VD: 01/03)">
+      </div>
+      <input id="ad-author" placeholder="Người ban hành">
+      <button class="adoc-submit" onclick="submitDoc()">Thêm văn bản</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD TASK MODAL -->
+<div class="modal-bg" id="task-modal" style="display:none">
+  <div class="modal-box">
+    <div class="modal-title" style="margin-bottom:4px">Thêm nhiệm vụ</div>
+    <div class="modal-sub">Điền thông tin nhiệm vụ mới</div>
+    <div class="modal-field"><label>Tên nhiệm vụ *</label><input id="t-title" placeholder="Mô tả công việc..."></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px">
+      <div class="modal-field" style="margin:0"><label>Trạng thái</label>
+        <select id="t-status" style="background:#1e2235;border:1px solid #ffffff0f;border-radius:9px;padding:9px 12px;font-size:12px;color:#e2e8f0;outline:none;font-family:inherit;width:100%">
+          <option value="todo">Cần làm</option><option value="doing">Đang làm</option><option value="done">Hoàn thành</option>
+        </select>
+      </div>
+      <div class="modal-field" style="margin:0"><label>Ưu tiên</label>
+        <select id="t-pri" style="background:#1e2235;border:1px solid #ffffff0f;border-radius:9px;padding:9px 12px;font-size:12px;color:#e2e8f0;outline:none;font-family:inherit;width:100%">
+          <option value="high">Cao</option><option value="mid">Trung bình</option><option value="low">Thấp</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>Người phụ trách</label>
+      <select id="t-assign" style="background:#1e2235;border:1px solid #ffffff0f;border-radius:9px;padding:9px 12px;font-size:12px;color:#e2e8f0;outline:none;font-family:inherit;width:100%">
+        <option>Quang Huy</option><option>Thu Hà</option><option>Minh Tuấn</option><option>Lan Anh</option>
+      </select>
+    </div>
+    <div class="modal-field"><label>Deadline</label><input id="t-date" placeholder="VD: 30/03"></div>
+    <div class="modal-actions">
+      <button class="mbtn-cancel" onclick="closeTaskModal()">Huỷ</button>
+      <button class="mbtn-login" onclick="submitTask()">Thêm</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const MEM={
+  "Quang Huy":{c:"#6c63ff",i:"QH"},
+  "Thu Hà":{c:"#1d9e75",i:"TH"},
+  "Minh Tuấn":{c:"#d4537e",i:"MT"},
+  "Lan Anh":{c:"#ba7517",i:"LA"},
+  "Admin":{c:"#6c63ff",i:"AD"}
+};
+function mkav(name,sz=22){
+  const m=MEM[name]||{c:"#475569",i:(name||"?").slice(0,2).toUpperCase()};
+  return `<div style="width:${sz}px;height:${sz}px;border-radius:50%;background:${m.c};display:flex;align-items:center;justify-content:center;font-size:${Math.floor(sz*.4)}px;font-weight:600;color:white;flex-shrink:0">${m.i}</div>`;
+}
+
+let isAdmin=false;
+let currentPage="kanban";
+
+const PAGES_META={
+  kanban:{title:"Kanban Board",sub:"Theo dõi tiến độ công việc"},
+  timeline:{title:"Timeline & Deadline",sub:"Lịch triển khai & mốc quan trọng"},
+  meeting:{title:"Cuộc họp & Ghi chú",sub:"Biên bản và action items"},
+  announce:{title:"Thông báo quy trình",sub:"Cập nhật & triển khai mới"},
+  docs:{title:"Quy trình & Văn bản",sub:"Tài liệu đã ban hành — mọi người xem được"},
+};
+
+function showPage(key,el){
+  currentPage=key;
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("on"));
+  document.querySelectorAll(".ni").forEach(n=>n.classList.remove("on"));
+  document.getElementById("page-"+key).classList.add("on");
+  el.classList.add("on");
+  document.getElementById("ptitle").textContent=PAGES_META[key].title;
+  document.getElementById("psub").textContent=PAGES_META[key].sub;
+  const showAdd=isAdmin&&(key==="kanban"||key==="announce"||key==="docs");
+  document.getElementById("add-btn").style.display=showAdd?"flex":"none";
+}
+
+function onSearch(){renderDocs();}
+function onAddClick(){
+  if(currentPage==="kanban")openTaskModal();
+  else if(currentPage==="docs")openDocModal();
+  else if(currentPage==="announce")alert("Thêm thông báo mới — tính năng thực tế kết nối Google Sheets");
+}
+
+/* ── AUTH ── */
+function openLogin(){document.getElementById("login-modal").style.display="flex";}
+function closeLogin(){document.getElementById("login-modal").style.display="none";}
+function doLogin(){
+  const u=document.getElementById("l-user").value.trim();
+  const p=document.getElementById("l-pass").value;
+  if(u==="admin"&&p==="1234"){
+    isAdmin=true;
+    closeLogin();
+    applyAdminUI();
+  } else {
+    document.getElementById("l-err").style.display="block";
+  }
+}
+function doLogout(){
+  isAdmin=false;
+  document.getElementById("sb-bottom-area").innerHTML=`
+    <div class="guest-box"><div class="guest-dot"></div><div class="guest-info"><div class="gn">Khách / Nhân viên</div><div class="gr">Xem công khai</div></div></div>
+    <div class="login-btn" onclick="openLogin()">Đăng nhập Admin</div>`;
+  document.getElementById("admin-badge").style.display="none";
+  document.getElementById("add-btn").style.display="none";
+  document.querySelectorAll(".kadd").forEach(b=>b.style.display="none");
+  document.querySelectorAll(".ann-del").forEach(b=>b.style.display="none");
+  document.querySelectorAll(".doc-btn-del").forEach(b=>b.style.display="none");
+  renderKanban();renderAnnounce();renderDocs();
+}
+function applyAdminUI(){
+  document.getElementById("sb-bottom-area").innerHTML=`
+    <div class="admin-box">
+      <div class="admin-row">${mkav("Admin",28)}<div class="admin-info"><div class="an">Admin</div><div class="ar">Quản trị viên</div></div></div>
+      <button class="logout-btn" onclick="doLogout()">Đăng xuất</button>
+    </div>`;
+  document.getElementById("admin-badge").style.display="flex";
+  const showAdd=currentPage==="kanban"||currentPage==="announce"||currentPage==="docs";
+  document.getElementById("add-btn").style.display=showAdd?"flex":"none";
+  renderKanban();renderAnnounce();renderDocs();
+}
+function requireAdmin(page,el){if(!isAdmin){openLogin();}else{showPage(page,el);}}
+
+/* ── KANBAN ── */
+let tasks=[
+  {id:1,title:"Kiểm tra quy trình nhập kho tháng 3",status:"done",priority:"high",assign:"Quang Huy",date:"22/03"},
+  {id:2,title:"Cập nhật SOP vận chuyển nội địa",status:"done",priority:"mid",assign:"Thu Hà",date:"23/03"},
+  {id:3,title:"Họp review quy trình với nhà cung cấp",status:"done",priority:"high",assign:"Minh Tuấn",date:"24/03"},
+  {id:4,title:"Triển khai hệ thống quét mã vạch mới",status:"doing",priority:"high",assign:"Quang Huy",date:"25/03"},
+  {id:5,title:"Đào tạo nhân sự ca chiều quy trình mới",status:"doing",priority:"mid",assign:"Lan Anh",date:"26/03"},
+  {id:6,title:"Lập báo cáo KPI vận hành Q1",status:"doing",priority:"mid",assign:"Thu Hà",date:"27/03"},
+  {id:7,title:"Rà soát tồn kho thiết bị văn phòng",status:"todo",priority:"low",assign:"Lan Anh",date:"28/03"},
+  {id:8,title:"Cập nhật nội quy an toàn lao động",status:"todo",priority:"high",assign:"Minh Tuấn",date:"29/03"},
+];
+let nextTask=9;
+const PCLS={high:{cls:"kp-high",txt:"Cao"},mid:{cls:"kp-mid",txt:"Trung bình"},low:{cls:"kp-low",txt:"Thấp"}};
+
+function renderKanban(){
+  const cols=[{key:"todo",label:"Cần làm",dot:"kd-todo"},{key:"doing",label:"Đang làm",dot:"kd-doing"},{key:"done",label:"Hoàn thành",dot:"kd-done"}];
+  document.getElementById("kanban-board").innerHTML=cols.map(col=>{
+    const items=tasks.filter(t=>t.status===col.key);
+    const cards=items.map(t=>{
+      const p=PCLS[t.priority];
+      const m=MEM[t.assign]||{c:"#475569"};
+      return `<div class="kcard"><div class="kcard-title">${t.title}</div>
+        <div class="kcard-meta">
+          <span class="kpill ${p.cls}">${p.txt}</span>
+          <span class="kcard-date"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${t.date}</span>
+          <div style="margin-left:auto;width:20px;height:20px;border-radius:50%;background:${m.c};display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:white">${(MEM[t.assign]||{i:"?"}).i}</div>
+        </div></div>`;
+    }).join("");
+    const addBtn=isAdmin?`<button class="kadd" onclick="quickAddTask('${col.key}')">+ Thêm nhanh</button>`:`<button class="kadd kadd-hidden" style="display:none"></button>`;
+    return `<div class="kol"><div class="kol-head"><div class="kol-title"><div class="kol-dot ${col.dot}"></div>${col.label}</div><div class="kol-cnt">${items.length}</div></div><div class="kol-cards">${cards}</div>${addBtn}</div>`;
+  }).join("");
+  document.getElementById("sc-total").textContent=tasks.length;
+  document.getElementById("sc-doing").textContent=tasks.filter(t=>t.status==="doing").length;
+  document.getElementById("sc-done").textContent=tasks.filter(t=>t.status==="done").length;
+  document.getElementById("nb-k").textContent=tasks.length;
+}
+function openTaskModal(){document.getElementById("task-modal").style.display="flex";}
+function closeTaskModal(){document.getElementById("task-modal").style.display="none";}
+function submitTask(){
+  const t=document.getElementById("t-title").value.trim();
+  if(!t){alert("Nhập tên nhiệm vụ");return;}
+  tasks.push({id:nextTask++,title:t,status:document.getElementById("t-status").value,priority:document.getElementById("t-pri").value,assign:document.getElementById("t-assign").value,date:document.getElementById("t-date").value||"—"});
+  document.getElementById("t-title").value="";document.getElementById("t-date").value="";
+  closeTaskModal();renderKanban();
+}
+function quickAddTask(status){
+  const t=prompt("Tên nhiệm vụ:");if(!t)return;
+  tasks.push({id:nextTask++,title:t,status,priority:"mid",assign:"Quang Huy",date:"—"});
+  renderKanban();
+}
+
+/* ── TIMELINE ── */
+const TL=[
+  {date:"29/03",day:"Thứ 7",title:"Deadline KPI Report Q1",desc:"Hoàn thiện và nộp báo cáo KPI vận hành Q1 lên Ban giám đốc. Bao gồm phân tích tồn kho, hiệu suất giao nhận và đề xuất cải tiến.",tags:["t-p","t-a"],tnames:["Báo cáo","Khẩn"],assign:["Quang Huy","Thu Hà"],dot:"#6c63ff"},
+  {date:"25/03",day:"Thứ 4",title:"Go-live hệ thống quét mã vạch",desc:"Triển khai chính thức tại kho. Team IT hỗ trợ trực tiếp tại hiện trường từ 7:00–17:00.",tags:["t-r","t-p"],tnames:["Triển khai","Ưu tiên cao"],assign:["Quang Huy"],dot:"#f87171"},
+  {date:"24/03",day:"Hôm nay",title:"Họp review nhà cung cấp",desc:"Review hợp đồng vận chuyển với 3 nhà cung cấp. Cần chuẩn bị báo cáo on-time delivery tháng 2 và đề xuất SLA mới.",tags:["t-a","t-t"],tnames:["Họp","Vận hành"],assign:["Minh Tuấn","Thu Hà","Quang Huy"],dot:"#fb923c"},
+  {date:"22/03",day:"Thứ 2",title:"Kiểm tra nhập kho tháng 3",desc:"Đã hoàn thành. Phát hiện 3 lô hàng thiếu chứng từ, đã liên hệ nhà cung cấp xử lý.",tags:["t-g"],tnames:["Hoàn thành"],assign:["Quang Huy"],dot:"#4ade80"},
+];
+function renderTimeline(){
+  document.getElementById("tl-wrap").innerHTML=TL.map((t,i)=>`
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-date">${t.date}</div><div class="tl-day">${t.day}</div></div>
+      <div class="tl-line"><div class="tl-dot" style="border-color:${t.dot};background:${t.dot}25"></div>${i<TL.length-1?'<div class="tl-conn"></div>':''}</div>
+      <div class="tl-body">
+        <div class="tl-title">${t.title}</div>
+        <div class="tl-desc">${t.desc}</div>
+        <div class="tl-tags">${t.tags.map((c,j)=>`<span class="tag ${c}">${t.tnames[j]}</span>`).join("")}</div>
+        <div class="tl-assign" style="margin-top:6px">${t.assign.map(a=>mkav(a,20)).join("")}<span class="tl-alabel">${t.assign.join(", ")}</span></div>
+      </div>
+    </div>`).join("");
+}
+
+/* ── MEETING ── */
+const MTGS=[
+  {title:"Review quy trình nhà cung cấp",date:"24/03/2026 · 09:00–10:30",st:"ms-now",stxt:"Đang diễn ra",notes:"Thảo luận SLA giao hàng mới, tỷ lệ on-time hiện tại 82% cần nâng lên 90%. Nhà cung cấp A cam kết cải thiện từ tháng 4.",actions:[{t:"Gửi biên bản cho NCC",d:false},{t:"Cập nhật SLA vào hợp đồng",d:false},{t:"Lên lịch follow-up 2 tuần",d:false}],members:["Minh Tuấn","Quang Huy","Thu Hà"]},
+  {title:"Kick-off triển khai mã vạch",date:"20/03/2026 · 14:00–15:00",st:"ms-done",stxt:"Hoàn thành",notes:"Đã thống nhất lịch go-live 25/03, phân công Quang Huy làm đầu mối. Team IT cài đặt phần mềm 23/03. Cần đào tạo 18 nhân sự trước go-live.",actions:[{t:"Cài phần mềm tại kho",d:true},{t:"In tài liệu hướng dẫn",d:true},{t:"Đào tạo ca sáng",d:true}],members:["Quang Huy","Lan Anh","Minh Tuấn"]},
+  {title:"Lập kế hoạch Q2 – Vận hành",date:"01/04/2026 · 09:00–11:00",st:"ms-plan",stxt:"Sắp diễn ra",notes:"Lên kế hoạch mở rộng kho, tuyển dụng 5 nhân sự mới và nâng cấp hệ thống quản lý tồn kho.",actions:[{t:"Chuẩn bị số liệu Q1",d:false},{t:"Draft kế hoạch ngân sách",d:false}],members:["Quang Huy","Thu Hà","Lan Anh","Minh Tuấn"]},
+];
+function renderMeeting(){
+  document.getElementById("mtg-list").innerHTML=MTGS.map((m,mi)=>`
+    <div class="mtg-card">
+      <div class="mtg-head">
+        <div><div class="mtg-title">${m.title}</div><div class="mtg-date"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${m.date}</div></div>
+        <span class="mtg-st ${m.st}">${m.stxt}</span>
+      </div>
+      <div class="mtg-notes">${m.notes}</div>
+      <div style="font-size:11px;color:#475569;margin-bottom:6px;font-weight:500">Action items</div>
+      <div class="action-list">${m.actions.map((a,ai)=>`<div class="action-item"><input type="checkbox" ${a.d?"checked":""} onchange="toggleAct(${mi},${ai},this)"><span id="ac-${mi}-${ai}" class="${a.d?"action-done":""}">${a.t}</span></div>`).join("")}</div>
+      <div class="mtg-members">${m.members.map(x=>mkav(x,22)).join("")}<span class="mlabel">${m.members.join(" · ")}</span></div>
+    </div>`).join("");
+}
+function toggleAct(mi,ai,el){const s=document.getElementById(`ac-${mi}-${ai}`);el.checked?s.classList.add("action-done"):s.classList.remove("action-done");}
+
+/* ── ANNOUNCE ── */
+let anns=[
+  {type:"urgent",title:"[Khẩn] Go-live hệ thống mã vạch – 25/03",time:"24/03 · 08:00",body:"Toàn bộ nhân sự kho phải có mặt trước 6:45 sáng ngày 25/03 để nhận thiết bị và hoàn tất đăng ký tài khoản hệ thống trước khi bắt đầu ca.",author:"Quang Huy"},
+  {type:"info",title:"Quy trình mới: Xử lý hàng trả về (SOP-RTN-2026)",time:"22/03 · 14:30",body:"Từ 01/04, toàn bộ hàng trả về phải được quét mã và ghi nhận lý do trong vòng 2 giờ kể từ khi nhận. Xem tài liệu chi tiết trong mục Quy trình & Văn bản.",author:"Thu Hà"},
+  {type:"success",title:"Hoàn thành kiểm kê kho tháng 3",time:"22/03 · 09:00",body:"Team vận hành đã hoàn thành kiểm kê toàn bộ 2.847 mã hàng đúng tiến độ. Độ chính xác 98.6%. Báo cáo chi tiết đã gửi email cho các team liên quan.",author:"Lan Anh"},
+];
+const ANN_ICON={
+  urgent:`<svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>`,
+  info:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+  success:`<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`
+};
+const ANN_IC_CLS={urgent:"ai-u",info:"ai-i",success:"ai-s"};
+function renderAnnounce(){
+  document.getElementById("nb-ann").textContent=anns.length;
+  document.getElementById("ann-list").innerHTML=anns.map((a,i)=>`
+    <div class="ann-card ${a.type}">
+      <div class="ann-head">
+        <div class="ann-icon ${ANN_IC_CLS[a.type]}">${ANN_ICON[a.type]}</div>
+        <span class="ann-title">${a.title}</span>
+        <span class="ann-time">${a.time}</span>
+      </div>
+      <div class="ann-body">${a.body}</div>
+      <div class="ann-footer">
+        <div class="ann-author">${mkav(a.author,18)}<span>${a.author}</span></div>
+        ${isAdmin?`<span class="ann-del" style="display:block" onclick="delAnn(${i})">Xoá</span>`:""}
+      </div>
+    </div>`).join("");
+}
+function delAnn(i){if(confirm("Xoá thông báo này?")){anns.splice(i,1);renderAnnounce();}}
+
+/* ── DOCS ── */
+let docs=[
+  {id:1,title:"Quy trình nhập – xuất kho hàng hoá",code:"SOP-WH-001",cat:"Vận hành",desc:"Quy định toàn bộ các bước tiếp nhận, kiểm đếm, lưu kho và xuất hàng. Áp dụng cho tất cả ca làm việc tại kho chính.",ver:"v3.2",date:"01/03/2026",author:"Quang Huy",ico:"di-b"},
+  {id:2,title:"SOP xử lý hàng trả về (Return)",code:"SOP-RTN-2026",cat:"Vận hành",desc:"Quy trình mới áp dụng từ 01/04/2026. Bắt buộc quét mã và ghi nhận lý do trong vòng 2 giờ kể từ khi nhận hàng trả.",ver:"v1.0",date:"22/03/2026",author:"Thu Hà",ico:"di-g"},
+  {id:3,title:"Nội quy an toàn lao động tại kho",code:"HSE-KHO-003",cat:"An toàn",desc:"Quy định về trang bị bảo hộ, khu vực cấm, quy trình xử lý sự cố và sơ cứu tại kho. Bắt buộc với mọi nhân viên.",ver:"v2.1",date:"15/01/2026",author:"Minh Tuấn",ico:"di-a"},
+  {id:4,title:"Quy trình đào tạo nhân sự mới",code:"HR-ONB-005",cat:"Nhân sự",desc:"Lộ trình onboarding 30 ngày cho nhân viên mới vào bộ phận vận hành. Bao gồm checklist, bài kiểm tra và KPI thử việc.",ver:"v2.0",date:"01/02/2026",author:"Lan Anh",ico:"di-t"},
+  {id:5,title:"Hướng dẫn sử dụng hệ thống quét mã vạch",code:"IT-BC-001",cat:"Vận hành",desc:"Tài liệu hướng dẫn thao tác trên phần mềm quét mã vạch mới triển khai từ 25/03/2026. Dành cho toàn bộ nhân sự kho.",ver:"v1.0",date:"24/03/2026",author:"Quang Huy",ico:"di-b"},
+  {id:6,title:"Quy chế chi tiêu nội bộ bộ phận",code:"FIN-EXP-012",cat:"Tài chính",desc:"Quy định mức chi tiêu, quy trình đề xuất, phê duyệt và thanh toán chi phí vận hành. Áp dụng từ Q1/2026.",ver:"v1.3",date:"03/01/2026",author:"Lan Anh",ico:"di-t"},
+];
+let nextDoc=7;
+const ALL_CATS=["Tất cả","Vận hành","An toàn","Nhân sự","Tài chính"];
+let activeDocCat="Tất cả";
+
+function renderCatPills(){
+  document.getElementById("cat-pills").innerHTML=ALL_CATS.map(c=>`<button class="cat-pill${c===activeDocCat?" on":""}" onclick="setDocCat('${c}',this)" style="margin-left:4px">${c}</button>`).join("");
+}
+function setDocCat(c){activeDocCat=c;renderCatPills();renderDocs();}
+
+const CAT_TAG={Vận hành:"t-p",Nhân sự:"t-t","An toàn":"t-r",Tài chính:"t-g"};
+
+function renderDocs(){
+  const q=(document.getElementById("doc-search")||{}).value||"";
+  const filtered=docs.filter(d=>{
+    const mq=!q||d.title.toLowerCase().includes(q.toLowerCase())||d.code.toLowerCase().includes(q.toLowerCase());
+    const mc=activeDocCat==="Tất cả"||d.cat===activeDocCat;
+    return mq&&mc;
+  });
+  document.getElementById("nb-doc").textContent=docs.length;
+  document.getElementById("doc-grid").innerHTML=filtered.map((d,i)=>`
+    <div class="doc-card">
+      <div class="doc-head">
+        <div class="doc-ico ${d.ico}"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <div class="doc-info"><div class="doc-title">${d.title}</div><div class="doc-code">${d.code}</div></div>
+      </div>
+      <div class="doc-desc">${d.desc}</div>
+      <div class="doc-meta">
+        <span class="doc-tag tag ${CAT_TAG[d.cat]||"t-p"}">${d.cat}</span>
+        <span class="doc-ver">${d.ver}</span>
+        <span class="doc-date">HĐ: ${d.date}</span>
+      </div>
+      <div class="doc-actions">
+        <button class="doc-btn"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Xem</button>
+        <button class="doc-btn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Tải về</button>
+        <span class="doc-author" style="margin-left:auto;display:flex;align-items:center;gap:5px">${mkav(d.author,18)}<span style="font-size:10px;color:#334155">${d.author}</span></span>
+        ${isAdmin?`<button class="doc-btn doc-btn-del" style="display:flex" onclick="delDoc(${i})"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>Xoá</button>`:""}
+      </div>
+    </div>`).join("")||`<div style="grid-column:span 2;text-align:center;padding:40px;color:#334155">Không tìm thấy văn bản phù hợp</div>`;
+}
+function openDocModal(){document.getElementById("adoc-modal").style.display="flex";}
+function closeDocModal(){document.getElementById("adoc-modal").style.display="none";}
+function submitDoc(){
+  const t=document.getElementById("ad-title").value.trim();
+  if(!t){alert("Nhập tên văn bản");return;}
+  const cats=["Vận hành","An toàn","Nhân sự","Tài chính"];
+  const icos=["di-b","di-a","di-t","di-g"];
+  const cat=document.getElementById("ad-cat").value;
+  const idx=cats.indexOf(cat);
+  docs.unshift({id:nextDoc++,title:t,code:document.getElementById("ad-code").value||"—",cat,desc:document.getElementById("ad-desc").value||"Chưa có mô tả.",ver:document.getElementById("ad-ver").value||"v1.0",date:document.getElementById("ad-date").value||"—",author:"Admin",ico:icos[idx]||"di-b"});
+  ["ad-title","ad-code","ad-desc","ad-ver","ad-date","ad-author"].forEach(id=>document.getElementById(id).value="");
+  closeDocModal();renderDocs();
+}
+function delDoc(i){if(confirm("Xoá văn bản này?")){const filtered=docs.filter((_,j)=>j!==i);docs=filtered;renderDocs();}}
+
+/* INIT */
+renderKanban();renderTimeline();renderMeeting();renderAnnounce();renderCatPills();renderDocs();
+</script>
